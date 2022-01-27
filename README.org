@@ -1,0 +1,8 @@
+* Personal MPV config
+  Used the following with some modifications
+  - https://github.com/occivink/mpv-image-viewer
+  - https://github.com/mpv-player/mpv/blob/master/TOOLS/lua/autoload.lua
+
+  #+begin_src shell-script
+    git clone git@github.com:Naheel-Azawy/mpv-config.git ~/.config/mpv
+  #+end_src
