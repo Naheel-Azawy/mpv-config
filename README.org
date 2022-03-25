@@ -2,6 +2,7 @@
   Used the following with some modifications
   - https://github.com/occivink/mpv-image-viewer
   - https://github.com/mpv-player/mpv/blob/master/TOOLS/lua/autoload.lua
+  # - https://github.com/TheAMM/mpv_thumbnail_script
 
   #+begin_src shell-script
     git clone git@github.com:Naheel-Azawy/mpv-config.git ~/.config/mpv

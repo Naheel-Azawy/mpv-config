@@ -599,8 +599,8 @@ if opts.start_on_mpv_startup then
     mp.observe_property("osd-width", "number", autostart)
 end
 
-mp.add_key_binding(nil, "playlist-view-open", function() start() end)
+mp.add_key_binding('ENTER', "playlist-view-open", function() start() end)
 mp.add_key_binding(nil, "playlist-view-close", stop)
-mp.add_key_binding('g', "playlist-view-toggle", toggle)
+-- mp.add_key_binding('g', "playlist-view-toggle", toggle)
 mp.add_key_binding(nil, "playlist-view-load-selection", load_selection)
 mp.add_key_binding(nil, "playlist-view-write-flag-file", write_flag_file)
