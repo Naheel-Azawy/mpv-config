@@ -218,6 +218,15 @@ function align_border(x, y)
     end
 end
 
+-- panning with the keyboard:
+-- pan-image takes the following arguments
+-- pan-image AXIS AMOUNT ZOOM_INVARIANT IMAGE_CONSTRAINED
+--            ^            ^                  ^
+--          x or y         |                  |
+--                         |                  |
+--   if yes, will pan by the same         if yes, stops panning if the image
+--     amount regardless of zoom             would go outside of the window
+
 function pan_image(axis, amount, zoom_invariant, image_constrained)
     amount = tonumber(amount)
     if not amount or amount == 0 or axis ~= "x" and axis ~= "y" then return end

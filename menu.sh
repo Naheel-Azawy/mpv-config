@@ -13,7 +13,8 @@ Flip horizontally
 Flip vertically
 Set as wallpaper
 Set as temporary wallpaper
-Drag and drop'
+Drag and drop
+Print'
 
 file="$2"
 files="$file" # TODO: allow multiple files
@@ -34,18 +35,23 @@ case "$choice" in
                 theterm "exiftool '$f' | less" &
             fi 2>/dev/null
         done;;
+
     "Open with")
         open --ask "$file" &;;
+
     "Copy file name")
         echo "$files" | xclip -in -selection clipboard;;
     "Copy image")
         xclip -selection clipboard -target image/png "$file";;
+
     "Set as wallpaper")
         ndg wallpaper "$file";;
     "Set as temporary wallpaper")
         feh --bg-fill "$file";;
+
     "Duplicate")
         mpv "$file" &;;
+
     "Rotate auto")
         echo "$files" | while read -r f; do convert "$f" -auto-orient "$f"; done;;
     "Rotate 270")
@@ -58,6 +64,7 @@ case "$choice" in
         echo "$files" | while read -r f; do convert "$f" -flop "$f"; done;;
     "Flip vertically")
         echo "$files" | while read -r f; do convert "$f" -flip "$f"; done;;
+
     "Delete")
         if [ "$files_len" = 1 ]; then
             P=$(basename "$file" | head -c 40)
@@ -70,6 +77,13 @@ case "$choice" in
             Trash)   echo "$files" | while read -r f; do gio trash "$f" || trash-put "$f"; done;;
             Delete*) echo "$files" | while read -r f; do rm -f "$f";                       done;;
         esac ;;
-    "Drag and drop" | "d")
+
+    "Drag and drop")
         echo "$files" | xargs dragon -a -x ;;
+
+    "Print")
+        tmp=/tmp/print-image-$$.pdf
+        convert "$file" "$tmp" &&
+            gtk-print "$tmp"
+        rm "$tmp"
 esac
