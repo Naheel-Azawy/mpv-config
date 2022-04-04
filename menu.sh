@@ -22,7 +22,7 @@ files_len=$(echo "$files" | wc -l)
 
 choice="$1"
 if [ "$choice" = menu ]; then
-    choice=$(echo "$LIST" | menus-face -i -l 20)
+    choice=$(echo "$LIST" | menus-face -i -l 20 -L cursor)
 fi
 
 case "$choice" in
@@ -34,36 +34,40 @@ case "$choice" in
             else
                 theterm "exiftool '$f' | less" &
             fi 2>/dev/null
-        done;;
+        done ;;
 
     "Open with")
-        open --ask "$file" &;;
+        app=$(echo | mimeopen --ask "$file" 2>/dev/null |
+                  sed -En 's/\s*(.+\)\s+.+)/\1/p'       |
+                  menus-face -l 20 -L cursor            |
+                  sed -En 's/(.+)\).+/\1/p')
+        echo "$app" | mimeopen --ask "$file" & ;;
 
     "Copy file name")
-        echo "$files" | xclip -in -selection clipboard;;
+        echo "$files" | xclip -in -selection clipboard ;;
     "Copy image")
-        xclip -selection clipboard -target image/png "$file";;
+        xclip -selection clipboard -target image/png "$file" ;;
 
     "Set as wallpaper")
-        ndg wallpaper "$file";;
+        ndg wallpaper "$file" ;;
     "Set as temporary wallpaper")
-        feh --bg-fill "$file";;
+        feh --bg-fill "$file" ;;
 
     "Duplicate")
-        mpv "$file" &;;
+        mpv "$file" & ;;
 
     "Rotate auto")
-        echo "$files" | while read -r f; do convert "$f" -auto-orient "$f"; done;;
+        echo "$files" | while read -r f; do convert "$f" -auto-orient "$f"; done ;;
     "Rotate 270")
-        echo "$files" | while read -r f; do convert "$f" -rotate 270 "$f"; done;;
+        echo "$files" | while read -r f; do convert "$f" -rotate 270 "$f"; done ;;
     "Rotate 90")
-        echo "$files" | while read -r f; do convert "$f" -rotate  90 "$f"; done;;
+        echo "$files" | while read -r f; do convert "$f" -rotate  90 "$f"; done ;;
     "Rotate 180")
-        echo "$files" | while read -r f; do convert "$f" -rotate 180 "$f"; done;;
+        echo "$files" | while read -r f; do convert "$f" -rotate 180 "$f"; done ;;
     "Flip horizontally")
-        echo "$files" | while read -r f; do convert "$f" -flop "$f"; done;;
+        echo "$files" | while read -r f; do convert "$f" -flop "$f"; done ;;
     "Flip vertically")
-        echo "$files" | while read -r f; do convert "$f" -flip "$f"; done;;
+        echo "$files" | while read -r f; do convert "$f" -flip "$f"; done ;;
 
     "Delete")
         if [ "$files_len" = 1 ]; then
@@ -72,10 +76,10 @@ case "$choice" in
             P="$files_len files"
         fi
         R=$(printf "Trash\nDelete permanently\nCancel" |
-                menus-face -p "Delete $P?" -i -sb red -nf red)
+                menus-face -L cursor -p "Delete $P?" -i -sb red -nf red -l 5)
         case "$R" in
-            Trash)   echo "$files" | while read -r f; do gio trash "$f" || trash-put "$f"; done;;
-            Delete*) echo "$files" | while read -r f; do rm -f "$f";                       done;;
+            Trash)   echo "$files" | while read -r f; do gio trash "$f" || trash-put "$f"; done ;;
+            Delete*) echo "$files" | while read -r f; do rm -f "$f";                       done ;;
         esac ;;
 
     "Drag and drop")
@@ -85,5 +89,5 @@ case "$choice" in
         tmp=/tmp/print-image-$$.pdf
         convert "$file" "$tmp" &&
             gtk-print "$tmp"
-        rm "$tmp"
+        rm "$tmp" ;;
 esac
